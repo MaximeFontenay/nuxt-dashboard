@@ -4,6 +4,15 @@ export default defineNuxtConfig({
         title: 'Nuxt Dashboard',
         viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
         charset: 'utf-8',
+        link: [
+            {
+                href: '/public/fonts/durer.woff2',
+                rel: 'preload', 
+                as: 'font', 
+                type: 'font/woff2', 
+                crossorigin: "",
+            }
+        ],
     },
     css: [
         '@/assets/_variables.scss',
