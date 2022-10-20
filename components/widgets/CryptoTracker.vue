@@ -36,7 +36,7 @@
 export default {
 	data: () => ({
 		temporality: ['daily', 'weekly', 'monthly', 'yearly'],
-		currentTemporality: null,
+		currentTemporality: 'weekly',
 		cryptos: [
 			{name: 'Bitcoin', value: 18309, chart: null, order: 1},
 			{name: 'Ethereum', value: 1290, chart: null, order: 2},
@@ -48,9 +48,6 @@ export default {
 			this.currentTemporality = temporality
 			console.log('crypto view : ' + temporality)
 		}
-	},
-	mounted() {
-		this.currentTemporality = 'weekly'
 	},
 }
 </script>

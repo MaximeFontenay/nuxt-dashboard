@@ -87,6 +87,14 @@ main {
 		font-size: 17px;
 		color: $light;
 	}
+
+   h3 {
+    font-size: 1rem;
+    color: $grey;
+		font-weight: 200;
+    cursor: pointer
+
+   }
 }
 
 </style>

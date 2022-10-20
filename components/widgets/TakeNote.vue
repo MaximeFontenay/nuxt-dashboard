@@ -8,7 +8,7 @@
 			>
 			<AddButton
 				text="note"
-				@click="addNote"
+				@click="newNote.length > 0 ? addNote(newNote) : null"
 			/>
 		</div>
 
@@ -18,7 +18,7 @@
 					v-for="note in notes"
 					:key="note.id"
 					class="note">
-					{{ note.text }}
+					  {{ note.text }}
 				</li>
 			</ul>
 		</template>
@@ -33,27 +33,20 @@ export default {
 		notes: [],
 		newNote: '',
 	}),
-
 	methods: {
 		addNote() {
 			const note = {
 				id: this.notes.length + 1,
 				text: this.newNote
 			}
-			console.log(note)
-			console.log(this.notes)
-
-			this.notes.push(note)
-
+			this.notes.unshift(note)
 			localStorage.setItem('Take a Note', JSON.stringify(this.notes))
-			this.newNote = null
-		}
+			this.newNote = ''
+		},
 	},
 	mounted() {
-		console.log(localStorage)
-
-		console.log(JSON.parse(localStorage.getItem('Take a Note')))
-		this.notes = JSON.parse(localStorage.getItem('Take a Note'))
+    const data = JSON.parse(localStorage.getItem('Take a Note'))
+		data ? this.notes = data : this.notes = [] 
 	},
 }
 </script>
