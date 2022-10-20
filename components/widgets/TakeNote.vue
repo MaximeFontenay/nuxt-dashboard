@@ -1,89 +1,103 @@
 <template>
-    <div class="dashboard__crypto">
-      <div class="dashboard__crypto__button-container">
-        <input 
-          type="text"
-          v-model="note"
-          >
-        <AddButton text="crypto" />
-      </div> 
+	<div class="dashboard__notes">
+		<div class="dashboard__notes__button-container">
+			<input
+				type="text"
+				placeholder="New note..."
+				v-model="newNote"
+			>
+			<AddButton
+				text="note"
+				@click="addNote"
+			/>
+		</div>
 
-      <ul class="dashboard__crypto__row-container">
-        <li class="crypto__name">
-        </li>
-      </ul>
-    </div>
+		<template v-if="notes.length">
+			<ul class="dashboard__notes__row-container">
+				<li
+					v-for="note in notes"
+					:key="note.id"
+					class="note">
+					{{ note.text }}
+				</li>
+			</ul>
+		</template>
+	</div>
 </template>
 
+
 <script lang="ts">
+
 export default {
-  data: () => ({
-    note: null
-  }),
-  methods: {
-    
-  },
-  mounted() {
-  },
+	data: () => ({
+		notes: [],
+		newNote: '',
+	}),
+
+	methods: {
+		addNote() {
+			const note = {
+				id: this.notes.length + 1,
+				text: this.newNote
+			}
+			console.log(note)
+			console.log(this.notes)
+
+			this.notes.push(note)
+
+			localStorage.setItem('Take a Note', JSON.stringify(this.notes))
+			this.newNote = null
+		}
+	},
+	mounted() {
+		console.log(localStorage)
+
+		console.log(JSON.parse(localStorage.getItem('Take a Note')))
+		this.notes = JSON.parse(localStorage.getItem('Take a Note'))
+	},
 }
 </script>
 
 <style lang="scss" scoped>
 @use '@/assets/variables' as *;
 
-.dashboard__crypto {
-  &__button-container {
-      @include flex(flex-start, center, $gap: 10px);
+.dashboard__notes {
 
-      button:not(.add-button) {
-          background-color: $t;
-          border: none;
-          color: $light;
-          padding: 2px 6px;
-          border-radius: 50px;
+	&__button-container {
+		@include flex(flex-start, center, $gap: 10px);
+		width: 100%;
 
-          &.active {
-              color: $dark;
-              background-color: $yellow;
-          }
-      }
-  }
+		input {
+			background: none;
+			border: none;
+			font-size: 1rem;
+			font-weight: 200;
+			color: $light;
 
-  &__row-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr .3fr;
-      grid-column-gap: 15px;
-      grid-row-gap: 5px;
-      width: 100%;
-      margin-top: 25px;
+			&:focus {
+				outline: none;
 
-      li {
-          min-width: 70px;
+			}
+		}
+	}
 
-          h3, p {
-            font-weight: light;
-            font-size: 15px;
-          }
-          &.crypto__value {
-              justify-self: center;
-              text-align: center;
-          }
+	&__row-container {
+		@include flex(flex-start, flex-start, column, $gap: 5px);
+		margin-top: 25px;
+		width: 100%;
 
-          &.crypto__chart {
-              @include color('background-color', $green, .5);
-              width: 100%;
-              justify-self: center;
-          }
-          &.crypto__order {
-              justify-self: end;
-              min-width: unset;  
-          }
-      }
-  }
+		li.note {
+			width: 100%;
+			border: solid 1px $light;
+			padding: 6px 10px;
+			font-size: 1.3rem;
+		}
+	}
 }
 
+
 button.add-button {
-  margin-left: auto
+	margin-left: auto
 }
 
 </style>

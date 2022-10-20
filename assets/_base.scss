@@ -47,7 +47,7 @@ body {
     -webkit-font-smoothing: subpixel-antialiased;
     -webkit-text-size-adjust: 100%;
     -webkit-touch-callout: none;
-    @include font;
+    @include font();
     @include scrollbar(3px, $primary);
     @include is-firefox {
         -moz-osx-font-smoothing: grayscale;

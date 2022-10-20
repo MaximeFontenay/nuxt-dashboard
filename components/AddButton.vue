@@ -70,12 +70,14 @@ export default {
             }
 
             &.content {
+                @include font();
                 @include flex(center, center);
                 text-align: center;
                 height: 15px;
                 padding: 0 5px;
                 text-transform: uppercase;
-                font-size: 10px;
+	            font-size: 10px;
+	            font-variation-settings: 'wght' 600;
                 transition: .2s;
             }
         }
