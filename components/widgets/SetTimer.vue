@@ -1,72 +1,138 @@
 <template>
-    <div class="dashboard__crypto">
-      Timer
+    <div class="dashboard__timer">
+	    <div class="dashboard__timer__button-container">
+		    <input
+			    type="text"
+			    placeholder="New entry..."
+			    v-model="newTimer"
+		    >
+		    <AddButton
+			    text="timer"
+			    @click="newTimer.length > 0 ? addTimer(newTimer) : null"
+		    />
+	    </div>
+	    <template v-if="timers.length">
+		    <ul class="dashboard__timer__row-container">
+			    <li
+				    v-for="timer in timers"
+				    :key="timer.id"
+				    class="timer">
+				    <p class="timer-entry">{{ timer.text }}</p>
+				    <div class="timer__meta">
+					    <p class="timer__meta-value">{{ timer.value }}</p>
+					    <template v-if="timer.tags.length">
+						    <ul class="timer__meta-tags">
+							    <li
+								    v-for="tag in timer.tags"
+								    :key="tag"
+								    class="tag">
+								    {{ tag }}
+							    </li>
+						    </ul>
+					    </template>
+				    </div>
+			    </li>
+		    </ul>
+	    </template>
     </div>
 </template>
 
 <script lang="ts">
 export default {
-  data: () => ({
-    
-  }),
-  methods: {
-    
-  },
+	data: () => ({
+		newTimer: '',
+		timers: [
+			{
+				id: 1,
+				text: 'Nuxt Training',
+				value: 4865,
+				tags: ['nuxt', 'javascript', 'vue'],
+			},
+			{
+				id: 2,
+				text: '30JS',
+				value: 251,
+				tags: ['javascript'],
+			},
+		],
+		tags: [
+			{slug:'javascript', color: 'red'},
+			{slug:'vue', color: 'green'},
+			{slug:'nuxt', color: 'blue'},
+		]
+	}),
+	methods: {
+		addTimer() {
+			const note = {
+				id: this.notes.length + 1,
+				text: this.newNote
+			}
+			this.notes.unshift(newTimer)
+			localStorage.setItem('Take a Note', JSON.stringify(this.notes))
+			this.newTimer = ''
+		},
+	},
+	mounted() {
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 @use '@/assets/variables' as *;
 
-.dashboard__crypto {
-  &__button-container {
-      @include flex(flex-start, center, $gap: 10px);
+.dashboard__timer {
+	&__button-container {
+		@include flex(flex-start, center, $gap: 10px);
+		width: 100%;
 
-      button:not(.add-button) {
-          background-color: $t;
-          border: none;
-          color: $light;
-          padding: 2px 6px;
-          border-radius: 50px;
+		input {
+			background: none;
+			border: none;
+			font-size: 1rem;
+			font-weight: 200;
+			color: $light;
 
-          &.active {
-              color: $dark;
-              background-color: $yellow;
-          }
-      }
-  }
+			&:focus {
+				outline: none;
+			}
+		}
+	}
 
-  &__row-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr .3fr;
-      grid-column-gap: 15px;
-      grid-row-gap: 5px;
-      width: 100%;
-      margin-top: 25px;
+	&__row-container {
+		@include flex(flex-start, flex-start, column, $gap: 5px);
+		margin-top: 25px;
+		width: 100%;
 
-      li {
-          min-width: 70px;
+		.timer {
+			@include flex(flex-start, flex-start, column);
+			width: 100%;
+			font-size: 1.3rem;
 
-          h3, p {
-            font-weight: light;
-            font-size: 15px;
-          }
-          &.crypto__value {
-              justify-self: center;
-              text-align: center;
-          }
+			&-entry {
+				color: $grey;
+			}
 
-          &.crypto__chart {
-              @include color('background-color', $green, .5);
-              width: 100%;
-              justify-self: center;
-          }
-          &.crypto__order {
-              justify-self: end;
-              min-width: unset;  
-          }
-      }
-  }
+			&__meta {
+				@include flex(space-between, center, $gap: 20px);
+
+				&-value {
+					color: $grey;
+				}
+
+				&-tags {
+					@include flex(space-between, center, $gap: 2px);
+
+					li {
+						color: $dark;
+						padding: 0 5px;
+						border-radius: 10px;
+						font-size: 1.3rem;
+						background-color: #00E39D;
+					}
+				}
+			}
+		}
+	}
 }
 
 button.add-button {

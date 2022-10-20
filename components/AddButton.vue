@@ -6,8 +6,8 @@
         :style="[color ? {'--color': color}: {'--color': '#E3D45A'}]"
         >
         <span class="icon">
-            <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 2.58571H3.43266V0H2.56734V2.58571H0V3.41429H2.56734V6H3.43266V3.41429H6V2.58571Z" fill="#1D1D1D"/>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M20 10C20 9.23732 19.3817 8.61905 18.619 8.61905H11.4422V1.44219C11.4422 0.645692 10.7965 0 10 0V0C9.2035 0 8.55781 0.645692 8.55781 1.44219V8.61905H1.38095C0.618274 8.61905 0 9.23732 0 10V10C0 10.7627 0.618273 11.381 1.38095 11.381H8.55781V18.5578C8.55781 19.3543 9.2035 20 10 20V20C10.7965 20 11.4422 19.3543 11.4422 18.5578V11.381H18.619C19.3817 11.381 20 10.7627 20 10V10Z" />
             </svg>
         </span>
         <span class="content">{{ text }}</span>
@@ -37,7 +37,7 @@ export default {
     button.add-button {
         $color: var(--color);
         @include flex(center, center);
-        padding: 0 0 0 13px;
+        padding: 0 0 0 15px;
         border: none;
         background: $t;
         border-radius: 50px;
@@ -52,18 +52,26 @@ export default {
             &.icon {
                 @include flex(center, center);
                 @include position(50%, 0);
-                translate: 0 -50%;
-                padding: 3px;
-                width: 13px;
-                height: 13px;
-                transition: .2s;
+                translate: -5px -50%;
+                padding: 5%;
+                aspect-ratio: 1;
+                width: 20px;
+	            max-width: 20px;
+	            height: 100%;
+	            max-height: 20px;
+                transition: .4s translate, .3s background;
+	            will-change: translate;
 
                 svg { 
-                    width: 100%;
-                    height: 100%;
-                    transition: .1s;
+                    width: 1rem;
+	                min-width: 1rem;
+	                max-width: 1rem;
+                    height: 1rem;
+                    transition: .5s;
+                    will-change: translate;
 
-                    path { 
+	                path {
+                        fill: $dark;
                         transition: .2s;
                     }
                 }
@@ -73,12 +81,11 @@ export default {
                 @include font();
                 @include flex(center, center);
                 text-align: center;
-                height: 15px;
-                padding: 0 5px;
+                padding: 0 .5rem;
                 text-transform: uppercase;
-	            font-size: 10px;
+	            font-size: 1.5rem;
 	            font-variation-settings: 'wght' 600;
-                transition: .2s;
+                transition: .2s color .2s, .2s background;
             }
         }
 
@@ -116,8 +123,12 @@ export default {
         &:hover {
             transition: .15s .15s;
 
+	        .icon {
+		        translate: 100% -50%;
+	        }
+
             svg {
-                translate: 50%;
+                translate: -200%;
             }
         }
 

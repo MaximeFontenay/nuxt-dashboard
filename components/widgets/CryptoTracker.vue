@@ -63,12 +63,21 @@ export default {
 			background-color: $t;
 			border: none;
 			color: $light;
-			padding: 2px 6px;
 			border-radius: 50px;
+			font-size: 1.3rem;
+			padding: 2px 6px;
+
+			&:first-child {
+				padding-left: 0;
+			}
+			&:last-child {
+				padding-right: 0;
+			}
 
 			&.active {
 				color: $dark;
 				background-color: $yellow;
+				padding: 2px 6px;
 			}
 		}
 	}

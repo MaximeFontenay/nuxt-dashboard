@@ -83,15 +83,14 @@ main {
 
 	&_title {
 		@include font($font2);
-		font-weight: 600;
-		font-size: 17px;
+		font-size: 2.7rem;
 		color: $light;
 	}
 
    h3 {
     font-size: 1rem;
     color: $grey;
-		font-weight: 200;
+	font-weight: 200;
     cursor: pointer
 
    }

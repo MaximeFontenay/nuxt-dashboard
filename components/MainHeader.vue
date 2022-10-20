@@ -37,6 +37,7 @@ nav {
 				font-family: $font;
 				font-weight: 200;
 				text-decoration: none;
+				font-size: 2rem;
 
 				&.router-link-active {
 					color: $yellow;
