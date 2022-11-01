@@ -25,11 +25,11 @@
 
 nav {
 	background-color: $dark;
-	padding: 20px;
+	padding: clamp(20px, 1.5vw, 50px);
 	border-radius: 100px;
 
 	ul {
-		@include flex(flex-start, center, $gap: 20px);
+		@include flex(flex-start, center, $gap: clamp(5px, 1vw, 40px));
 
 		li {
 			a {
@@ -37,7 +37,7 @@ nav {
 				font-family: $font;
 				font-weight: 200;
 				text-decoration: none;
-				font-size: 2rem;
+				@include fz(2.5);
 
 				&.router-link-active {
 					color: $yellow;

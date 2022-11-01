@@ -1,29 +1,56 @@
 <script lang="ts" setup>
-definePageMeta({
-	layout: 'dashboard'
-})
+	definePageMeta({
+		layout: 'dashboard'
+	})
 </script>
 
 <template>
 	<main>
-		<MainHeader />
+		<MainHeader/>
+
+		<p @click="resetWidgetData('all')" style="font-size: 18px; cursor: pointer">
+			reset all storage
+		</p>
+
+		<div class="dashboard__widgets__controls">
+			<template
+				v-for="widget in widgets"
+				:key="widget.slug"
+			>
+				<label
+					:for="widget.slug + '-toggle'">
+					{{ widget.name }}
+				</label>
+
+				<input
+					type="checkbox"
+					:id="widget.slug + '-toggle'"
+					:name="widget.name"
+					:checked="widget.active"
+					@change="widget.active = !widget.active"
+				>
+			</template>
+		</div>
+
 		<template
 			v-for="widget in widgets"
-			:key="widget.name"
+			:key="widget.slug"
 		>
 			<article
 				v-if="widget.active"
-				class="dashboard-card"
+				class="dashboard__card"
+				:style="{'order': widget.order}"
 			>
-				<h2 class="dashboard-card_title">{{ widget.name }}</h2>
+				<h2 class="dashboard__card-title">{{ widget.name }}</h2>
 
-				<h3 @click="resetWidgetData(widget.name)">
+				<h3 @click="resetWidgetData(widget.slug)">
 					reset
 				</h3>
 
 				<component
 					v-if="widget.active"
 					:is="widget.location"
+					:widget="widget"
 				/>
 			</article>
 		</template>
@@ -38,28 +65,35 @@ export default {
 		widgets: [
 			{
 				name: 'cryptoTracker',
+				slug: 'cryptotracker',
 				location: 'WidgetsCryptoTracker',
-				active: true,
+				active: false,
 				order: 1
 			},
 			{
 				name: 'Take a Note',
+				slug: 'takeanote',
 				location: 'WidgetsTakeNote',
 				active: true,
 				order: 2
 			},
 			{
 				name: 'setTimer',
+				slug: 'settimer',
 				location: 'WidgetsSetTimer',
-				active: true,
+				active: false,
 				order: 3
 			},
 		],
 	}),
 	methods: {
-		resetWidgetData(widget) {
-			localStorage.removeItem(widget)
-			console.log('reset "' + widget + '" data')
+		resetWidgetData(widgetSlug:string) {
+			if(widgetSlug === 'all') {
+				localStorage.clear()
+			}
+
+			localStorage.removeItem(widgetSlug)
+			console.log('reset "' + widgetSlug + '" data')
 		}
 	}
 }
@@ -73,27 +107,46 @@ main {
 	min-width: 100%;
 }
 
-.dashboard-card {
-	@include flex(flex-start, flex-start, column, $gap: 20px);
+.dashboard__widgets__controls {
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: repeat(2, 1fr);
+	gap: clamp(10px, 1vw, 20px);
+	@include fz(1.5);
+	color: $light;
 	background-color: $dark;
 	padding: 20px 25px;
 	border-radius: 20px;
-	min-width: 100px;
-	color: $light;
 
-	&_title {
+	input {
+		justify-content: flex-end;
+		justify-self: flex-end;
+	}
+}
+
+.dashboard__card {
+	@include flex(flex-start, flex-start, column, $gap: 20px);
+	width: auto;
+	min-width: 10vw;
+	background-color: $dark;
+	padding: 20px 25px;
+	border-radius: 20px;
+	color: $light;
+	position: relative;
+
+	&-title {
 		@include font($font2);
-		font-size: 2.7rem;
+		@include fz(3);
 		color: $light;
 	}
 
-   h3 {
-    font-size: 1rem;
-    color: $grey;
-	font-weight: 200;
-    cursor: pointer
-
-   }
+	h3 {
+		@include fz(1);
+		color: $grey;
+		font-weight: 200;
+		cursor: pointer;
+		@include position($right: 25px, $top: 20px);
+	}
 }
 
 </style>

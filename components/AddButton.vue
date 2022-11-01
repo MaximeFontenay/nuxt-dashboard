@@ -59,7 +59,7 @@ export default {
 	            max-width: 20px;
 	            height: 100%;
 	            max-height: 20px;
-                transition: .4s translate, .3s background;
+                transition: .4s translate, .1s background-color;
 	            will-change: translate;
 
                 svg { 
@@ -67,7 +67,7 @@ export default {
 	                min-width: 1rem;
 	                max-width: 1rem;
                     height: 1rem;
-                    transition: .5s;
+                    transition: .4s;
                     will-change: translate;
 
 	                path {
@@ -79,13 +79,13 @@ export default {
 
             &.content {
                 @include font();
-                @include flex(center, center);
+	            @include fz(1);
+	            @include flex(center, center);
                 text-align: center;
                 padding: 0 .5rem;
                 text-transform: uppercase;
-	            font-size: 1.5rem;
 	            font-variation-settings: 'wght' 600;
-                transition: .2s color .2s, .2s background;
+                transition: .175s color .175s, .2s background-color;
             }
         }
 

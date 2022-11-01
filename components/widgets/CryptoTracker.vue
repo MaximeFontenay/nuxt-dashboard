@@ -64,7 +64,7 @@ export default {
 			border: none;
 			color: $light;
 			border-radius: 50px;
-			font-size: 1.3rem;
+			@include fz(1);
 			padding: 2px 6px;
 
 			&:first-child {

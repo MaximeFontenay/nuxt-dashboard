@@ -13,9 +13,8 @@ $green: #5DBE74;
 $yellow: #E3D45A;
 $purple: #A798E8;
 $black: #0B0905;
-$grey: #8F9A9D;
+$grey: #818181;
 $white: #F3F5F9;
-
 
 $primary: $black;
 $secondary: $yellow;
@@ -84,6 +83,21 @@ $font2Format: 'woff2';
     #{$property}: rgba($color, $alpha)
 }
 
+@mixin fz($i) {
+    @if $i >= 1 and $i < 2 {
+        font-size: clamp(calc(#{$i} * 13px), calc(#{$i} * .5vw), calc(#{$i} * 50px))
+    }
+    @if $i >= 2 and $i < 3 {
+        font-size: clamp(calc(#{$i} * 8px), calc(#{$i} * .6vw), calc(#{$i} * 30px))
+    }
+    @if $i >= 3 and $i < 4 {
+        font-size: clamp(calc(#{$i} * 6px), calc(#{$i} * .7vw), calc(#{$i} * 25px))
+    }
+    @if $i >= 4 {
+        font-size: clamp(calc(#{$i} * 7px), calc(#{$i} * .8vw), calc(#{$i} * 22px))
+    }
+}
+
 @mixin font($whichFont: $font) {
     @if $whichFont != 'FontName' {
         font-family: $whichFont, sans-serif;
@@ -135,6 +149,12 @@ $font2Format: 'woff2';
     }
 }
 
+@mixin glassMorphism($start: rgba( 227, 212, 90, 0.1), $end: rgba(29, 29, 29, .1) ) {
+    background-image: radial-gradient( circle farthest-corner at 92.3% 71.5%, $end 10%, $start 100%);
+    backdrop-filter: blur( 14px );
+    -webkit-backdrop-filter: blur( 14px );
+}
+
 @mixin hz-auto {
     margin: { 
         left: auto;
@@ -169,7 +189,8 @@ $font2Format: 'woff2';
 
 @mixin scrollbar($width: 1.5px, $color: $primary, $track: $t) {
     scrollbar-width: thin;
-    scrollbar-color: $color $t;    
+    scrollbar-color: $color $t;
+
     &::-webkit-scrollbar {
         height: $width;
         width: $width;
@@ -183,10 +204,9 @@ $font2Format: 'woff2';
         background: $color;
         border-radius: 5px;
         cursor: pointer;
-
     }
     &::-webkit-scrollbar-thumb:hover {
-        @include color('background', $primary, .5);
+        @include color('background', $color, .5);
     }
 }
 
