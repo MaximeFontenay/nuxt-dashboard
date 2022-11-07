@@ -18,10 +18,11 @@
 					v-for="note in notes"
 					:key="note.id"
 					class="note"
-					:style="`
-						--color: ${note.bgColor};
-						background-color: ${note.bgColor}1A
-					`"
+					:class="[note.bgColor === false ? 'stroked' : '']"
+					:style="`background-color: ${note.bgColor}20;` +
+						[note.modify ? 'align-items: initial;' : 'align-items: flex-start;'] +
+						[note.bgColor === false ? `--color: #E3D45A; --color50: #E3D45A22;` : `--color: ${note.bgColor}; --color50: ${note.bgColor}22;`]
+					"
 				>
 					<template v-if="!note.modify">
 						<p
@@ -33,28 +34,22 @@
 						<div class="note-text-container"
 						     v-if="note.text.length > 50"
 						     >
-							<details
-								class="note-text"
-							>
+							<details class="note-text">
 								<summary>
-									{{ note.text.substring(0, 50) }} <span>...</span>
+									{{ note.text.substring(0, 50) }} <span :style="`color: ${note.bgColor}`">...</span>
 								</summary>
-								<p>
-									{{ note.text }}
-								</p>
+								<p>{{ note.text }}</p>
 							</details>
 						</div>
-
 					</template>
 
 					<textarea
 						class="note-text"
 						v-model="note.text"
 						:id="`note-${note.id}`"
-						:style="note.modify ? 'display: block' : 'display: none'"
-					/>
+						:style="note.modify ? 'display: block' : 'display: none'"/>
 
-					<div class="button note-button">
+					<div class="note-buttons-container">
 						<button
 							class="button note-button-edit"
 							@click="editNote(note)"
@@ -63,34 +58,40 @@
 							<iconsPen />
 						</button>
 
-						<details
-							class="button note-button-color"
-							v-if="note.modify"
-						>
-							<summary>
-								<iconsPalette />
-							</summary>
+						<div class="note-buttons-container-top">
+							<button
+								class="button note-button-validation"
+								@click="updateNotes(); note.modify = false"
+								v-if="note.modify"
+							>
+								<iconsCheck />
+							</button>
 
-							<ul class="note-color-container">
-								<li
-									v-for="color in dashboard.colors"
-									:key="color.value"
-									:style="`background-color: ${color.value}`"
-									@click="setNoteColor(note, color.value)"
-								>
-								</li>
-							</ul>
+							<details
+								class="button note-button-color"
+								v-if="note.modify"
+							>
+								<summary>
+									<iconsPalette />
+								</summary>
 
-						</details>
+								<ul class="note-color-container">
+									<li
+										:style="`background-color: transparent`"
+										@click="setNoteColor(note)"
+									>
+									</li>
+									<li
+										v-for="color in dashboard.colors"
+										:key="color.value"
+										:style="`background-color: ${color.value}`"
+										@click="setNoteColor(note, color.value)"
+									>
+									</li>
+								</ul>
 
-
-						<button
-							class="button note-button-validation"
-							@click="updateNotes(); note.modify = false"
-							v-if="note.modify"
-						>
-							<iconsCheck />
-						</button>
+							</details>
+						</div>
 
 						<button
 							class="button note-button-delete"
@@ -134,7 +135,7 @@ export default {
 				id: this.notes.length + 1,
 				text: this.newNote,
 				modify: false,
-				bgColor: 'red'
+				bgColor: false
 			}
 			this.notes.unshift(note)
 			this.newNote = ''
@@ -162,11 +163,14 @@ export default {
 
 			this.updateNotes()
 		},
-
-		setNoteColor(note: Note, color:string):void {
-			note.bgColor = color
+		setNoteColor(note: Note, color?:string):void {
+			if (color) {
+				note.bgColor = color
+			}
+			else {
+				note.bgColor = false
+			}
 		},
-
 		updateNotes():void {
 			localStorage.setItem(this.widget.slug, JSON.stringify(this.notes))
 		}
@@ -180,10 +184,20 @@ export default {
 				note.modify = false
 			})
 		}
-
 		console.log(localStorage)
+
+		// Close note color selector on click
+		document.addEventListener('click' , (e):void => {
+			const noteButtonColor = [...document.querySelectorAll('details.button.note-button-color')]
+			noteButtonColor.map(details => {
+				if (!details.contains(e.target)) {
+					details.removeAttribute("open")
+				}
+			})
+		})
 	},
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -214,18 +228,29 @@ export default {
 		width: 100%;
 
 		.note {
-			$color: var(--color, #E3D45AFF);
-			@include flex(space-between, flex-start);
+			$color: var(--color);
+			$color50: var(--color50);
+			@include flex(space-between, unset);
 			width: 100%;
-			border: solid 1px $light;
 			padding: 10px;
 			position: relative;
 			border-radius: 10px;
 
+			&.stroked {
+				outline: dotted 0.5px $light;
+				outline-offset: -0.5px;
+
+				.note-text-container {
+					@include scrollbar(5px, $yellow);
+				}
+				textarea {
+					@include scrollbar(5px, $yellow);
+				}
+			}
+
 			&-text {
 				@include fz(1.25);
 				padding-right: .75rem;
-				margin-right: .25rem;
 				background: none;
 				outline: none;
 				border: none;
@@ -233,18 +258,21 @@ export default {
 				color: $light;
 				cursor: default;
 				line-height: 1.7;
-				max-width: 20vw;
-				width: 100%;
 				overflow-wrap: break-word;
 			}
 
 			textarea { // &-text
-				@include scrollbar(5px, $yellow);
+				@include scrollbar(5px, $color);
 				padding: .75rem;
 				cursor: text;
 				min-height: 110.5px; // Line-height * lines
-				max-height: 200px; // same as details content
-				width: 100%;
+				max-height: 250px; // same as details content
+				width: calc(100% - 2.75rem);
+
+				&::-webkit-resizer {
+					background: rgba(0,0,0,0);
+					border-bottom: 1px dotted $color;
+				}
 			}
 
 			p.note-text {
@@ -252,8 +280,9 @@ export default {
 			}
 
 			&-text-container {
-				@include scrollbar(5px, $yellow);
+				@include scrollbar(5px, $color);
 				overflow-y: scroll;
+				overflow-x: hidden;
 				text-overflow: clip;
 				max-height: 200px;
 			}
@@ -295,7 +324,7 @@ export default {
 					}
 
 					&:hover::before{
-						@include glassMorphism;
+						@include glassMorphism($color50);
 						border-radius: 8.5px;
 					}
 
@@ -311,19 +340,22 @@ export default {
 				}
 			}
 
-			&-button {
+			&-buttons-container {
 				@include flex(flex-end, center, row, wrap, $gap: 3px);
-				padding: 0 .5rem;
+				flex: 0 0 2.75rem;
+				padding-left: .5rem;
+
+				&-top {
+					@include flex(flex-end, center, column, nowrap, $gap: 3px);
+					margin-bottom: auto;
+				}
 
 				.button {
 					@include flex(center, center);
-					flex: 0 0 calc(50% - 1.5px);
+					@include fixed-size(2.25rem);
 					background: none;
 					border: none;
 					padding: .5rem;
-					width: 2.25rem;
-					min-width: 2.25rem;
-					max-width: 2.25rem;
 					pointer-events: none;
 					opacity: 0.1;
 					transition: .2s;
@@ -338,8 +370,12 @@ export default {
 					}
 				}
 
-				&-validation {
+				.note-button-validation {
 					opacity: 1 !important;
+				}
+
+				.note-button-delete {
+					margin-top: auto;
 				}
 
 				&:hover button, &:hover details {
@@ -351,10 +387,15 @@ export default {
 				// Colors Note
 				details.note-button-color {
 					position: relative;
+					padding: 0;
 
 					&[open] {
 						opacity: 1;
 						pointer-events: all;
+					}
+
+					summary {
+						padding: 0.5rem;
 					}
 
 					ul.note-color-container {
@@ -373,6 +414,10 @@ export default {
 							border-radius: 10px;
 							cursor: pointer;
 							transition: .2s;
+
+							&:first-child {
+								border: solid 1px $light;
+							}
 
 							&:hover {
 								opacity: .5;

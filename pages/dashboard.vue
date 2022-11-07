@@ -126,8 +126,7 @@ main {
 
 .dashboard__card {
 	@include flex(flex-start, flex-start, column, $gap: 20px);
-	width: auto;
-	min-width: 10vw;
+	width: clamp(310px, 25vw, 400px);
 	background-color: $dark;
 	padding: 20px 25px;
 	border-radius: 20px;

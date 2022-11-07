@@ -5,6 +5,16 @@ export default defineNuxtConfig({
         viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
         charset: 'utf-8',
     },
+    app: {
+        pageTransition: {
+            name: 'fade',
+            mode: 'out-in' // default
+        },
+        layoutTransition: {
+            name: 'slide',
+            mode: 'out-in' // default
+        }
+    },
     css: [
         '@/assets/_variables.scss',
         '@/assets/_base.scss',

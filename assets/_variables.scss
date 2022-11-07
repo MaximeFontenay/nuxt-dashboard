@@ -150,7 +150,7 @@ $font2Format: 'woff2';
 }
 
 @mixin glassMorphism($start: rgba( 227, 212, 90, 0.1), $end: rgba(29, 29, 29, .1) ) {
-    background-image: radial-gradient( circle farthest-corner at 92.3% 71.5%, $end 10%, $start 100%);
+    background-image: radial-gradient( circle farthest-corner at 92.3% 71.5%, $end 15%, $start 100%);
     backdrop-filter: blur( 14px );
     -webkit-backdrop-filter: blur( 14px );
 }
@@ -169,7 +169,7 @@ $font2Format: 'woff2';
     background-repeat: $repeat;
 }
 
-@mixin image-size($width, $height, $fit: cover) {
+@mixin fixed-size($width, $height: $width, $fit: cover) {
     width: $width;
     min-width: $width;
     max-width: $width;
