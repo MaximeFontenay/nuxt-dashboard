@@ -11,6 +11,9 @@
 		<p @click="resetWidgetData('all')" style="font-size: 18px; cursor: pointer">
 			reset all storage
 		</p>
+		<p @click="checkStorage()" style="font-size: 18px; cursor: pointer">
+			check storage
+		</p>
 
 		<div class="dashboard__widgets__controls">
 			<template
@@ -74,14 +77,14 @@ export default {
 				name: 'Take a Note',
 				slug: 'takeanote',
 				location: 'WidgetsTakeNote',
-				active: true,
+				active: false,
 				order: 2
 			},
 			{
 				name: 'setTimer',
 				slug: 'settimer',
 				location: 'WidgetsSetTimer',
-				active: false,
+				active: true,
 				order: 3
 			},
 		],
@@ -94,6 +97,9 @@ export default {
 
 			localStorage.removeItem(widgetSlug)
 			console.log('reset "' + widgetSlug + '" data')
+		},
+		checkStorage():void {
+			console.log(localStorage)
 		}
 	}
 }

@@ -47,7 +47,8 @@
 						class="note-text"
 						v-model="note.text"
 						:id="`note-${note.id}`"
-						:style="note.modify ? 'display: block' : 'display: none'"/>
+						:style="note.modify ? 'display: block' : 'display: none'"
+						@keyup.enter="updateNotes(); note.modify = false"/>
 
 					<div class="note-buttons-container">
 						<button
@@ -107,16 +108,17 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-	const widget = ref<Widget>;
-	const note = ref<Note>;
-</script>
-
 <script lang="ts">
 
-export default {
+export default defineComponent({
+	props: {
+		'widget': {
+			type: Object as () => Widget,
+			required: true,
+		}
+	},
 	data: () => ({
-		notes: [],
+		notes: [] as Note[],
 		newNote: '',
 		dashboard: {
 			colors: [
@@ -126,7 +128,6 @@ export default {
 				{name: 'yellow', value: '#E3D45A'},
 				{name: 'purple', value: '#A798E8'},
 			]
-
 		}
 	}),
 	methods: {
@@ -175,28 +176,25 @@ export default {
 			localStorage.setItem(this.widget.slug, JSON.stringify(this.notes))
 		}
 	},
-
 	mounted() {
-		const data = JSON.parse(localStorage.getItem(this.widget.slug))
+		const data = JSON.parse(localStorage.getItem(this.widget.slug)!)
 		if (data) {
 			this.notes = data
 			this.notes.map((note: Note) => {
 				note.modify = false
 			})
 		}
-		console.log(localStorage)
-
 		// Close note color selector on click
 		document.addEventListener('click' , (e):void => {
 			const noteButtonColor = [...document.querySelectorAll('details.button.note-button-color')]
 			noteButtonColor.map(details => {
-				if (!details.contains(e.target)) {
+				if (!details.contains(e.target as Node)) {
 					details.removeAttribute("open")
 				}
 			})
 		})
 	},
-}
+})
 
 </script>
 
@@ -402,7 +400,7 @@ export default {
 						@include flex(center, center, $gap: 7.5px);
 						@include position(calc(-100% - 7.5px), 50%);
 						translate: -50%;
-						background: $black;
+						background-color: $black;
 						max-width: unset;
 						padding: 7.5px 10px;
 						border-radius: 50px;
