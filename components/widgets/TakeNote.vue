@@ -274,7 +274,7 @@ export default defineComponent({
 			}
 
 			p.note-text {
-				padding: .75rem;
+				padding: 0 .75rem;
 			}
 
 			&-text-container {

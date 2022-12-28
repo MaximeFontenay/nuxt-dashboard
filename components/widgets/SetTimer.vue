@@ -29,7 +29,6 @@
 					            min="0"
 					            max="23"
 					            maxlength="2"
-					            @keyup="editTimer(timer, 'hours', $event)"
 					            @keydown="editTimer(timer, 'hours', $event)"
 					            @keyup.enter="updateTimer"
 					            v-model="timer.hours"
@@ -40,7 +39,6 @@
 					            min="0"
 					            max="59"
 					            maxlength="2"
-					            @keyup="editTimer(timer, 'minutes', $event)"
 					            @keydown="editTimer(timer, 'minutes', $event)"
 					            @keyup.enter="updateTimer"
 					            v-model="timer.minutes"
@@ -51,7 +49,6 @@
 					            min="0"
 					            max="59"
 					            maxlength="2"
-					            @keyup="editTimer(timer, 'seconds', $event)"
 					            @keydown="editTimer(timer, 'seconds', $event)"
 					            @keyup.enter="updateTimer"
 					            v-model="timer.seconds"
@@ -131,6 +128,14 @@ export default defineComponent({
 		// 	},
 		// ],
 	}),
+	watch: {
+		timers(newQuestion, oldQuestion) {
+				console.log(newQuestion)
+				console.log(oldQuestion)
+				// this.playTimer()
+				// https://vuejs.org/guide/essentials/watchers.html#basic-example
+		}
+	},
 	methods: {
 		addEntry(text: string): void {
 			const addTimer: Timer = {
@@ -148,6 +153,8 @@ export default defineComponent({
 			this.playTimer(addTimer)
 			this.newTimer = ''
 			this.updateTimer()
+
+			//TODO Corriger l'update du timer créé (watcher ?)
 		},
 		playTimer(timer: Timer): void {
 			this.stopAllTimers(timer.id)
@@ -178,54 +185,44 @@ export default defineComponent({
 		},
 		editTimer(timer: Timer, value:string, event:any):void {
 			this.pauseTimer(timer)
+			const key: string = event.key
 			const valideInputs: string[] = ['ArrowUp','ArrowDown','ArrowRight','ArrowLeft','Enter','Tab','Backspace','Delete','Shift','Control']
+			const isANumber:boolean = isFinite(parseInt(key))
 
-			console.log(event.target.value)
+			// Cancel function if this is not a number / a valideInput
+			if (!isANumber && !valideInputs.includes(key) || event.target.value.length === 2 && !valideInputs.includes(key)) {
+				event.preventDefault()
+			}
+
+			// Add 0 if input is going to be empty
+			else if(key === 'Backspace' && event.target.value.length <= 1) {
+				event.preventDefault()
+				event.target.value = '0'
+			}
+
+			// Delete the 0 on the first digit
+			else if(event.target.value === '0' && parseInt(key) > 0) {
+				console.log('phhe')
+				event.preventDefault()
+				event.target.value = key
+			}
+
 			// Max length = 2 digits
-			if (event.target.value.length < 1 || valideInputs.includes(event.key) ) {
-
+			if (event.target.value.length <= 1 || valideInputs.includes(key) ) {
 				const limit:number = event.target.getAttribute('max')
-				const isANumber:boolean = isFinite(event.key)
 
-				// Add 0 if input is going to be empty
-				if(event.key === 'Backspace' && event.target.value.length === 0) {
-					console.log('vide')
-					event.target.value = '0'
-				}
-
-				if (isANumber) {
-					// Delete the 0 on the first digit
-					if(event.target.value.length === 1 && event.target.value === '0') {
-						event.target.value = ''
-					}
-
-					// modifier la valeur sans dépasser la limite
-					if(event.target.value > limit) {
-						event.target.value = limit
-					}
-				}
-
-				// Si un des cotés rentre dans la range
-				// if (event.key + event.target.value < limit || event.target.value + event.key < limit) {
-				// 	event.preventDefault()
-				//
-				// 	if (event.key + event.target.value < limit && event.target.value + event.key >= limit) {
-				// 		console.log('ajout à gauche possible')
-				// 		event.target.value = event.key + event.target.value
-				// 	}
-				// 	else if (event.key + event.target.value >= limit && event.target.value + event.key < limit) {
-				// 		console.log('ajout à droite possible')
-				// 		event.target.value = event.target.value + event.key
-				// 	}
-				// } else if (!valideInputs.includes(event.key)) {
-				// 	event.preventDefault()
+				// modifier la valeur sans dépasser la limite
+				// if(event.target.value > limit) {
+				// 	event.target.value = limit
 				// }
 
 			}
 			else {
-				event.target.value = String(event.target.value).slice(0, 2)
-				console.log('slice')
+				event.preventDefault()
 			}
+
+			this.updateTimer()
+			console.log('update timer')
 		},
 		stopAllTimers(saveTimerId?: number): void {
 			this.timers.map((timer: Timer) => {
@@ -253,7 +250,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
 
 .dashboard__timer {
 	&__button-container {
@@ -337,19 +334,22 @@ export default defineComponent({
 					@include flex(center, center, $gap: 7.5px);
 					@include fz(1);
 					color: $grey;
-					transition: .2s;
-					cursor: pointer;
-
-					&:hover {
-						@include color('color', $light, .8)
-					}
 
 					input {
 						width: 2ch;
 						background: none;
 						border: none;
 						outline: none;
+						overflow: hidden;
+						text-overflow: clip;
 						text-align: right;
+						transition: .2s;
+
+						&:hover, &:focus, &::selection {
+							@include color('color', $light, .8);
+							background: $t;
+							box-shadow: 0 1px 0 0 $light;
+						}
 
 						&::-webkit-outer-spin-button,
 						&::-webkit-inner-spin-button {

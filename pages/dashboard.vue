@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+	import Dashboard from "~/pages/dashboard.vue";
+
 	definePageMeta({
 		layout: 'dashboard'
 	})
