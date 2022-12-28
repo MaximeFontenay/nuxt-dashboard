@@ -18,19 +18,18 @@
 				    v-for="timer in timers"
 				    :key="timer.id"
 				    class="timer">
-				    <p class="timer-entry">{{ timer.text }}</p>
+				    <p class="timer-entry">{{ timer.title }}</p>
 				    <div class="timer__meta">
-					    <p
-					        class="timer__meta-value"
-					    >
+					    <p class="timer__meta-value">
 					        <input
 					            type="number"
 					            :id="`timer-${timer.id}-hours`"
 					            min="0"
-					            max="23"
+					            max="99"
 					            maxlength="2"
 					            @keydown="editTimer(timer, 'hours', $event)"
 					            @keyup.enter="updateTimer"
+					            @blur="checkValidity(timer.hours,23, $event)"
 					            v-model="timer.hours"
 					        /> <span>h</span>
 					        <input
@@ -41,6 +40,7 @@
 					            maxlength="2"
 					            @keydown="editTimer(timer, 'minutes', $event)"
 					            @keyup.enter="updateTimer"
+					            @blur="checkValidity(timer.minutes,59, $event)"
 					            v-model="timer.minutes"
 					        /> <span>min</span>
 					        <input
@@ -51,6 +51,7 @@
 					            maxlength="2"
 					            @keydown="editTimer(timer, 'seconds', $event)"
 					            @keyup.enter="updateTimer"
+					            @blur="checkValidity(timer.seconds, 59, $event)"
 					            v-model="timer.seconds"
 					        /> <span>s</span>
 					    </p>
@@ -110,69 +111,56 @@ export default defineComponent({
 		// timers: [
 		// 	{
 		// 		id: 1,
-		// 		text: 'Nuxt Training',
+		// 		title: 'Nuxt Training',
 		// 		value: 99584,
 		// 		tags: ['nuxt', 'javascript', 'vue'],
 		// 	},
 		// 	{
 		// 		id: 2,
-		// 		text: '30JS',
+		// 		title: '30JS',
 		// 		value: 251,
 		// 		tags: ['javascript'],
 		// 	},
 		// 	{
 		// 		id: 3,
-		// 		text: 'No minutes',
+		// 		title: 'No minutes',
 		// 		value: 42,
 		// 		tags: ['kekw'],
 		// 	},
 		// ],
 	}),
-	watch: {
-		timers(newQuestion, oldQuestion) {
-				console.log(newQuestion)
-				console.log(oldQuestion)
-				// this.playTimer()
-				// https://vuejs.org/guide/essentials/watchers.html#basic-example
-		}
-	},
 	methods: {
 		addEntry(text: string): void {
 			const addTimer: Timer = {
 				id: this.timers.length + 1,
-				text: text,
+				title: text,
 				hours: 0,
 				minutes: 0,
 				seconds: 0,
 				playing: true,
-				modify: false,
 				tags: [],
 			}
-			this.stopAllTimers()
-			this.timers.unshift(addTimer)
 			this.playTimer(addTimer)
+			this.timers.unshift(addTimer)
 			this.newTimer = ''
-			this.updateTimer()
 
-			//TODO Corriger l'update du timer créé (watcher ?)
+			//TODO Attribution d'une value brut dans un input = la value Nuxt n'est pas MAJ
 		},
 		playTimer(timer: Timer): void {
-			this.stopAllTimers(timer.id)
 			timer.playing = true
+			this.stopAllTimers(timer.id)
+			window.clearInterval(this.interval)
 			this.interval = window.setInterval(() => {
 				if(timer.playing) {
 					timer.seconds++
-
 					if(timer.seconds >= 60) {
 						timer.seconds = 0
 						timer.minutes++
-
 						if (timer.minutes >= 60) {
 							timer.minutes = 0
 							timer.hours++
 						}
 					}
-
 					this.updateTimer()
 				}
 			}, 1000)
@@ -192,6 +180,7 @@ export default defineComponent({
 			// Cancel function if this is not a number / a valideInput
 			if (!isANumber && !valideInputs.includes(key) || event.target.value.length === 2 && !valideInputs.includes(key)) {
 				event.preventDefault()
+				return
 			}
 
 			// Add 0 if input is going to be empty
@@ -202,28 +191,20 @@ export default defineComponent({
 
 			// Delete the 0 on the first digit
 			else if(event.target.value === '0' && parseInt(key) > 0) {
-				console.log('phhe')
 				event.preventDefault()
 				event.target.value = key
 			}
 
-			// Max length = 2 digits
-			if (event.target.value.length <= 1 || valideInputs.includes(key) ) {
-				const limit:number = event.target.getAttribute('max')
-
-				// modifier la valeur sans dépasser la limite
-				// if(event.target.value > limit) {
-				// 	event.target.value = limit
-				// }
-
-			}
-			else {
-				event.preventDefault()
-			}
-
 			this.updateTimer()
-			console.log('update timer')
 		},
+
+		checkValidity(value:any, limit:number, event:any):void {
+			if(event.target.value > limit) {
+				event.target.value = limit
+				this.updateTimer()
+			}
+		},
+
 		stopAllTimers(saveTimerId?: number): void {
 			this.timers.map((timer: Timer) => {
 				if (timer.id !== saveTimerId) {

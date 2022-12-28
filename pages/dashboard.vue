@@ -72,7 +72,7 @@ export default {
 				name: 'cryptoTracker',
 				slug: 'cryptotracker',
 				location: 'WidgetsCryptoTracker',
-				active: false,
+				active: true,
 				order: 1
 			},
 			{
@@ -86,7 +86,7 @@ export default {
 				name: 'setTimer',
 				slug: 'settimer',
 				location: 'WidgetsSetTimer',
-				active: true,
+				active: false,
 				order: 3
 			},
 		],

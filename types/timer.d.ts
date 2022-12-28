@@ -1,10 +1,9 @@
 declare interface Timer {
     id: number,
-    text: string,
+    title: string,
     hours: number,
     minutes: number,
     seconds: number,
     playing: boolean,
-    modify: boolean,
     tags?: string[],
 }
