@@ -37,8 +37,9 @@ export default {
     button.add-button {
         $color: var(--color);
         @include flex(center, center);
-        padding: 0 0 0 15px;
+        padding-left: 15px;
         border: none;
+        outline: none;
         background: $t;
         border-radius: 50px;
         position: relative;
@@ -46,20 +47,20 @@ export default {
 
         span { 
             border-radius: 50px;
-            border: solid .5px $t;
+	        outline: solid .5px $t;
             transition: .2s;
 
             &.icon {
                 @include flex(center, center);
                 @include position(50%, 0);
-                translate: -5px -50%;
+                translate: -3px -50%;
                 padding: 5%;
                 aspect-ratio: 1;
-                width: 20px;
+                width: auto;
 	            max-width: 20px;
 	            height: 100%;
 	            max-height: 20px;
-                transition: .4s translate, .1s background-color;
+                transition: .5s translate, .25s background-color;
 	            will-change: translate;
 
                 svg { 
@@ -67,7 +68,7 @@ export default {
 	                min-width: 1rem;
 	                max-width: 1rem;
                     height: 1rem;
-                    transition: .4s;
+                    transition: .5s;
                     will-change: translate;
 
 	                path {
@@ -90,7 +91,7 @@ export default {
         }
 
         &:not(.stroke) {
-            border: 1px solid $t;
+            outline: 1px solid $t;
 
             span { 
                 background-color: $color;
@@ -108,7 +109,7 @@ export default {
         &.stroke {
             span { 
                 background-color: $t;
-                border-color: $color;
+	            outline-color: $color;
 
                 svg path {
                     fill: $color
@@ -124,7 +125,7 @@ export default {
             transition: .15s .15s;
 
 	        .icon {
-		        translate: 100% -50%;
+		        translate: calc(100% + 2px) -50%;
 	        }
 
             svg {
@@ -133,10 +134,10 @@ export default {
         }
 
         &:not(.stroke):hover {
-            border-color: $color;
+            outline-color: $color;
 
-            span { 
-                border-color: $t;
+            span {
+	            outline-color: $t;
                 background-color: $t;
                 color: $color;
 

@@ -15,28 +15,30 @@
 
 		<ol class="dashboard__crypto__row-container">
 			<template v-for="crypto in cryptos">
-				<li class="crypto__name">
+				<li class="crypto__name" :style="{order: crypto.order}">
 					<h3>{{ crypto.name }}</h3>
 				</li>
-				<li class="crypto__value">
+				<li class="crypto__chart" :style="{order: crypto.order}">
+				</li>
+				<li class="crypto__value" :style="{order: crypto.order}">
 					<p>{{ crypto.value }}$</p>
-				</li>
-				<li class="crypto__chart">
-					<div>{{ crypto.chart }}</div>
-				</li>
-				<li class="crypto__order">
-					<p>{{ crypto.order }}</p>
 				</li>
 			</template>
 		</ol>
+
+		<button class="button" @click="getCryptoData('bitcoin')">test</button>
 	</div>
 </template>
 
 <script lang="ts">
+import {useFetch} from "nuxt/app";
+
 export default {
+
 	data: () => ({
 		temporality: ['daily', 'weekly', 'monthly', 'yearly'],
 		currentTemporality: 'weekly',
+		currencyConversion: 'eur',
 		cryptos: [
 			{name: 'Bitcoin', value: 18309, chart: null, order: 1},
 			{name: 'Ethereum', value: 1290, chart: null, order: 2},
@@ -44,11 +46,49 @@ export default {
 		]
 	}),
 	methods: {
-		changeTemporality(temporality: string) {
+		changeTemporality(temporality: string):void {
 			this.currentTemporality = temporality
-			console.log('crypto view : ' + temporality)
-		}
+
+			for(const crypto of this.cryptos) {
+				this.getCryptoData(crypto.name)
+			}
+		},
+
+		getCryptoData(coin:number|string):object {
+			const coinId:string = coin.toString().toLowerCase().trim().replace(' ','-')
+			const date = new Date()
+			const unixTimestampNow = Math.floor(date.getTime() / 1000);
+			let unixTimestampTemporality:number
+
+			switch (this.currentTemporality) {
+				case ('daily') :
+					// 5 minutes interval = 288 values
+					unixTimestampTemporality = Math.floor(date.setDate(date.getDate() - 1) / 1000)
+					break
+
+				case ('weekly') :
+					// 1 hour interval = 169 values
+					unixTimestampTemporality = Math.floor(date.setDate(date.getDate() - 7) / 1000)
+					break
+
+				case ('monthly') :
+					// 1 hour interval ≈ 730 values
+					unixTimestampTemporality = Math.floor(date.setMonth(date.getMonth() - 1) / 1000)
+					break
+
+				default : // Yearly
+					// 1 day interval = 365 values
+					unixTimestampTemporality = Math.floor(date.setFullYear(date.getFullYear() - 1) / 1000)
+			}
+
+			const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=${this.currencyConversion}&from=${unixTimestampTemporality}&to=${unixTimestampNow}`
+			console.log(useFetch(url).data)
+			return useFetch(url)
+		},
 	},
+	mounted() {
+
+	}
 }
 </script>
 
@@ -57,7 +97,7 @@ export default {
 
 .dashboard__crypto {
 	&__button-container {
-		@include flex(flex-start, center, $gap: 10px);
+		@include flex(flex-start, stretch, $gap: 10px);
 
 		button:not(.add-button) {
 			background-color: $t;
@@ -84,7 +124,7 @@ export default {
 
 	&__row-container {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr .3fr;
+		grid-template-columns: 1fr 1.5fr 1fr;
 		grid-column-gap: 15px;
 		grid-row-gap: 5px;
 		width: 100%;
@@ -92,6 +132,7 @@ export default {
 
 		li {
 			min-width: 70px;
+			flex: 1;
 
 			h3, p {
 				font-variation-settings: 'wght' 100;

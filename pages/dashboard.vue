@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-	import Dashboard from "~/pages/dashboard.vue";
-
 	definePageMeta({
 		layout: 'dashboard'
 	})
@@ -111,7 +109,7 @@ export default {
 @use '@/assets/variables' as *;
 
 main {
-	@include flex(flex-start, flex-start, $wrap: wrap, $gap: 20px);
+	@include flex(flex-start, stretch, $wrap: wrap, $gap: 20px);
 	min-width: 100%;
 }
 
@@ -134,7 +132,9 @@ main {
 
 .dashboard__card {
 	@include flex(flex-start, flex-start, column, $gap: 20px);
-	width: clamp(310px, 25vw, 400px);
+	width: fit-content;
+	min-width: 310px;
+	max-width: 90vw;
 	background-color: $dark;
 	padding: 20px 25px;
 	border-radius: 20px;
