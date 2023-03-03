@@ -197,14 +197,12 @@ export default defineComponent({
 
 			this.updateTimer()
 		},
-
 		checkValidity(value:any, limit:number, event:any):void {
 			if(event.target.value > limit) {
 				event.target.value = limit
 				this.updateTimer()
 			}
 		},
-
 		stopAllTimers(saveTimerId?: number): void {
 			this.timers.map((timer: Timer) => {
 				if (timer.id !== saveTimerId) {
@@ -216,7 +214,15 @@ export default defineComponent({
 			localStorage.setItem(this.widget.slug, JSON.stringify(this.timers))
 		},
 	},
-
+	watch: {
+		timers: {
+			handler(newTimers) {
+				this.timers = newTimers
+				console.log(newTimers)
+			},
+			deep: true
+		}
+	},
 	mounted() {
 		const data = JSON.parse(localStorage.getItem(this.widget.slug)!)
 		if (data) {

@@ -87,6 +87,13 @@ export default {
 				active: false,
 				order: 3
 			},
+			{
+				name: 'Calendar',
+				slug: 'calendar',
+				location: 'WidgetsCalendar',
+				active: true,
+				order: 4
+			},
 		],
 	}),
 	methods: {
@@ -106,10 +113,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
 
 main {
-	@include flex(flex-start, stretch, $wrap: wrap, $gap: 20px);
+	@include flex(flex-start, flex-start, $wrap: wrap, $gap: 20px);
 	min-width: 100%;
 }
 
@@ -120,6 +127,8 @@ main {
 	gap: clamp(10px, 1vw, 20px);
 	@include fz(1.5);
 	color: $light;
+	width: fit-content;
+	place-content: center;
 	background-color: $dark;
 	padding: 20px 25px;
 	border-radius: 20px;
@@ -133,7 +142,6 @@ main {
 .dashboard__card {
 	@include flex(flex-start, flex-start, column, $gap: 20px);
 	width: fit-content;
-	min-width: 310px;
 	max-width: 90vw;
 	background-color: $dark;
 	padding: 20px 25px;
@@ -142,7 +150,6 @@ main {
 	position: relative;
 
 	&-title {
-		@include font($font2);
 		@include fz(3);
 		color: $light;
 	}

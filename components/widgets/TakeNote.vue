@@ -47,7 +47,7 @@
 						class="note-text"
 						v-model="note.text"
 						:id="`note-${note.id}`"
-						:style="note.modify ? 'display: block' : 'display: none'"
+						v-show="note.modify"
 						@keyup.enter="updateNotes(); note.modify = false"/>
 
 					<div class="note-buttons-container">
@@ -199,7 +199,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
 
 .dashboard__notes {
 
@@ -255,7 +255,7 @@ export default defineComponent({
 				opacity: 1;
 				color: $light;
 				cursor: default;
-				line-height: 1.7;
+				line-height: 23px;
 				overflow-wrap: break-word;
 			}
 

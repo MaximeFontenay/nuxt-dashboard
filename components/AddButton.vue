@@ -22,7 +22,7 @@ export default {
   }),
   methods: {
     addItem() {
-        console.log('ajout dun item')
+        console.log("ajout d'un item")
     }
   }
 }
@@ -30,13 +30,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
     
     $color: $primary;
 
     button.add-button {
         $color: var(--color);
-        @include flex(center, center);
+        @include flex(center, stretch);
         padding-left: 15px;
         border: none;
         outline: none;

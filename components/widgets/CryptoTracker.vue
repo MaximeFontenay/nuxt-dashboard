@@ -54,7 +54,7 @@ export default {
 			}
 		},
 
-		getCryptoData(coin:number|string):object {
+		getCryptoData(coin:number|string):void {
 			const coinId:string = coin.toString().toLowerCase().trim().replace(' ','-')
 			const date = new Date()
 			const unixTimestampNow = Math.floor(date.getTime() / 1000);
@@ -82,8 +82,11 @@ export default {
 			}
 
 			const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=${this.currencyConversion}&from=${unixTimestampTemporality}&to=${unixTimestampNow}`
-			console.log(useFetch(url).data)
-			return useFetch(url)
+			const data = useFetch(url, {
+				headers: useRequestHeaders(['authorization'])
+			})
+
+			console.log(data)
 		},
 	},
 	mounted() {
@@ -93,7 +96,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
 
 .dashboard__crypto {
 	&__button-container {

@@ -37,7 +37,7 @@ $s10 : '10rem';
 
 //? Main Fonts
 // .ttf format('TrueType') | .otf format('OpenType') | .woff format('woff') | .woff2 format('woff2')
-$font: 'excon';
+$font: 'satoshi';
 $fontFormat: 'woff2';
 
 @if $font != 'FontName' {
@@ -50,20 +50,6 @@ $fontFormat: 'woff2';
         font-display: swap;
     }
 } 
-
-//? Secondary Font 
-$font2: 'durer';
-$font2Format: 'woff2';
-
-@if $font2 != 'FontName' {
-    @font-face {
-        font-family: $font2;
-        src: url('/fonts/#{$font2}.#{$font2Format}') format('#{$font2Format}');
-        font-weight: 1 1000;
-        font-style: normal;
-        font-display: swap;
-    }
-}
 
 //! ////////////
 //! // Mixins // 
