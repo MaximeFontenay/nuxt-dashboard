@@ -123,6 +123,9 @@ button {
     color: inherit;
     outline: none;
 }
+:where(p, h1, h2, h3, h4, h5, h6, input, button, textarea, select) {
+    line-height: 1;
+}
 :where(details, button) {
     cursor: pointer;
 }

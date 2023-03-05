@@ -23,6 +23,10 @@ export default {
   methods: {
     addItem() {
         console.log("ajout d'un item")
+        this.alert()
+    },
+    alert() {
+
     }
   }
 }
@@ -83,7 +87,7 @@ export default {
 	            @include fz(1);
 	            @include flex(center, center);
                 text-align: center;
-                padding: 0 .5rem;
+                padding: .3rem .6rem;
                 text-transform: uppercase;
 	            font-variation-settings: 'wght' 600;
                 transition: .175s color .175s, .2s background-color;

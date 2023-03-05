@@ -21,7 +21,9 @@
 				:key="widget.slug"
 			>
 				<label
-					:for="widget.slug + '-toggle'">
+					:for="widget.slug + '-toggle'"
+					:class="widget.active ? 'active' : ''"
+					>
 					{{ widget.name }}
 				</label>
 
@@ -54,9 +56,12 @@
 					v-if="widget.active"
 					:is="widget.location"
 					:widget="widget"
+					@alert="alersqdt(1,2,3)"
 				/>
 			</article>
 		</template>
+
+			<Alert alertType="info" text="test" :timer="2000" />
 	</main>
 </template>
 
@@ -91,12 +96,18 @@ export default {
 				name: 'Calendar',
 				slug: 'calendar',
 				location: 'WidgetsCalendar',
-				active: true,
+				active: false,
 				order: 4
 			},
 		],
 	}),
 	methods: {
+		alersqdt(a, b, c):void {
+			console.log(a)
+			console.log(b)
+			console.log(c)
+		},
+
 		resetWidgetData(widgetSlug:string) {
 			if(widgetSlug === 'all') {
 				localStorage.clear()
@@ -126,16 +137,29 @@ main {
 	grid-template-columns: repeat(2, 1fr);
 	gap: clamp(10px, 1vw, 20px);
 	@include fz(1.5);
-	color: $light;
 	width: fit-content;
 	place-content: center;
 	background-color: $dark;
 	padding: 20px 25px;
 	border-radius: 20px;
 
+	label {
+		color: $light;
+		cursor: pointer;
+		transition: .3s;
+
+		&:hover {
+			color: $yellow;
+		}
+
+		&.active {
+			color: $yellow;
+			text-decoration: underline;
+		}
+	}
+
 	input {
-		justify-content: flex-end;
-		justify-self: flex-end;
+		display: none;
 	}
 }
 
@@ -145,7 +169,7 @@ main {
 	max-width: 90vw;
 	background-color: $dark;
 	padding: 20px 25px;
-	border-radius: 20px;
+	border-radius: 0 20px 20px 20px;
 	color: $light;
 	position: relative;
 

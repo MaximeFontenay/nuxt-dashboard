@@ -32,7 +32,7 @@
 							{{ note.text }}
 						</p>
 						<div class="note-text-container"
-						     v-if="note.text.length > 50"
+						     v-else
 						     >
 							<details class="note-text">
 								<summary>
@@ -289,6 +289,7 @@ export default defineComponent({
 				display: block;
 				transition: 0s;
 				position: relative;
+				width: 40ch;
 
 				&[open] {
 					transition: .3s .005s max-height;
@@ -311,6 +312,7 @@ export default defineComponent({
 					color: $light;
 					transition: .1s background-color;
 					position: relative;
+					line-height: 1.2;
 					z-index: 1;
 
 					&::before {
@@ -335,6 +337,7 @@ export default defineComponent({
 					pointer-events: none;
 					position: relative;
 					z-index: 2;
+					line-height: 1.2;
 				}
 			}
 
