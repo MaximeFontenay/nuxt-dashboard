@@ -70,7 +70,7 @@ export default {
 				name: 'cryptoTracker',
 				slug: 'cryptotracker',
 				location: 'WidgetsCryptoTracker',
-				active: true,
+				active: false,
 				order: 1
 			},
 			{

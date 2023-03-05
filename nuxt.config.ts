@@ -5,7 +5,7 @@ export default defineNuxtConfig({
             title: 'Nuxt Dashboard',
             viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
             charset: 'utf-8',
-
+            htmlAttrs: {lang: 'fr'},
             meta: [{
                name: 'description', content: 'Create my personal customizable dashboard for free.'
             }]
@@ -24,11 +24,24 @@ export default defineNuxtConfig({
         '@/assets/_base.scss',
         '@/assets/main.scss',
     ],
+
     components: {
         global: true,
         dirs: ['~/components']
     },
     typescript: {
         strict: true
-    }
+    },
+    modules: [
+        '@nuxt/content',
+        '@nuxt/image-edge',
+        '@nuxtjs/supabase',
+        // '@nuxtjs/fontaine',
+        // '@nuxtjs/html-validator',
+    ],
+    runtimeConfig: {
+        public: {
+            siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://nuxt-dashboard.com',
+        }
+    },
 })

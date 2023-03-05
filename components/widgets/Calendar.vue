@@ -6,7 +6,7 @@
 					<button
 						type="button"
 						:class="selectedMonth === month.id ? 'active' : ''"
-						@click="initCalendar(month.id)">
+						@click.self="initCalendar(month.id)">
 						{{ month.name }}
 					</button>
 				</li>
@@ -27,6 +27,7 @@
 						:class="[
 							day.contentType === 'daySpace' ? 'space' : '',
 							selectedYear === getCurrenYear && month.id === getCurrentMonth && parseInt(day.content) === getCurrentDay ? 'today' : '',
+							day.events?.length ? 'has-event' : '',
 						]"
 						@click="getDay(day)"
 					>
@@ -95,11 +96,13 @@ export default defineComponent({
 
 			// Push days in the selectedMonth array
 			for (let dayNumber: number = 1; dayNumber <= paddingDays + daysInMonth; dayNumber++) {
+				const random = Math.random() < 0.2
 				const daySquare: Day = {
 					id: dayNumber,
 					slug: `m${month}d${dayNumber - paddingDays}`,
 					contentType: '',
 					content: '',
+					events: random ? [{id: dayNumber, content: 'Lorem ipsum'}] :[]
 				}
 				if (dayNumber > paddingDays) {
 					daySquare.contentType = 'dayNumber'
@@ -160,17 +163,15 @@ export default defineComponent({
 @use '@/assets/_variables.scss' as *;
 
 .dashboard__calendar {
-	max-width: 100%;
+	position: relative;
 
 	&__button-container {
 		@include flex(center, center);
-		position: relative;
-		max-width: calc((2.5ch * 7) + (6px * 7) + (7px * 6) + 4.5px);
-		// (item-width + item-padding + item-gap + fix)
+		@include position(0, 0);
 
 		&::before, &::after {
 			content: '';
-			width: calc(1ch + 5px);
+			width: 20px;
 			height: 100%;
 			position: relative;
 			z-index: 10;
@@ -188,7 +189,7 @@ export default defineComponent({
 		}
 
 		ol {
-			@include flex(flex-start, stretch, $gap: 10px);
+			@include flex(flex-start, stretch, $gap: 5px);
 			width: 100%;
 			position: relative;
 			padding: 0 1ch;
@@ -208,20 +209,17 @@ export default defineComponent({
 					border: none;
 					color: $light;
 					border-radius: 50px;
-					padding: 2px 6px;
-
-					&:first-child {
-						padding-left: 0;
-					}
-
-					&:last-child {
-						padding-right: 0;
-					}
+					padding: 3px 6px;
+					line-height: 1;
 
 					&.active {
 						color: $dark;
 						background-color: $yellow;
-						padding: 2px 6px;
+						padding: 3px 6px;
+					}
+
+					&:not(.active):hover {
+						color: $yellow;
 					}
 				}
 			}
@@ -241,18 +239,17 @@ export default defineComponent({
 	}
 
 	.calendar {
-		@include flex(flex-start, flex-start, column);
-		margin-top: 25px;
+		@include flex(flex-start, flex-start, column, $gap: .5ch);
+		width: fit-content;
+		margin-top: calc(25px + 1ch);
 
-		:deep(ol li) {
+		ol li {
 			@include flex(center, center);
 			line-height: 1;
 			flex: 1;
 			padding: 3px;
-			width: 100%;
-			height: calc(2ch + 6px);
-			border-radius: 10%;
-			aspect-ratio: 1;
+			width: 2.5ch;
+			//height: calc(2ch + 6px);
 			color: $grey;
 			text-align: center;
 			text-transform: uppercase;
@@ -261,36 +258,72 @@ export default defineComponent({
 		}
 
 		&__header {
+			width: 100%;
 			display: grid;
 			grid-template-columns: repeat(7, 1fr);
-			gap: 7px;
-			width: 100%;
+			gap: 10px;
+			place-content: center;
+			place-items: center;
+			text-align: center;
+
+			.weekday {
+				width: 100%;
+				height: auto;
+			}
 		}
 
 		&__body {
+			width: fit-content;
 			display: grid;
 			grid-template-columns: repeat(7, 1fr);
+			gap: 10px;
+			place-content: center;
+			place-items: center;
 			text-align: center;
-			gap: 7px;
 
 			:deep(li) {
 				&.day:not(.space) {
-					@include fz(1);
+					@include fz(1.4);
 					outline: solid .5px $grey;
 					cursor: pointer;
-					transition: .2s;
+					transition: all .2s;
+					will-change: outline;
 					background-color: $t;
 					pointer-events: all;
+					position: relative;
+					border-radius: 10%;
+					aspect-ratio: 1;
 
 					&:hover {
 						background-color: $yellow;
-						outline-color: $yellow;
 						color: $dark;
+						outline-color: $yellow;
+						outline-offset: 1.5px;
+					}
+
+					&.has-event {
+						color: $yellow;
+
+						&:after {
+							@include position(0, $right: 0);
+							color: $dark;
+							font-size: 9px;
+							translate: 35% -35%;
+							border-radius: 50px;
+							width: 5px;
+							aspect-ratio: 1;
+							background-color: $yellow;
+						}
+						&:hover {
+							color: $dark;
+							font-weight: 400;
+						}
 					}
 
 					&.today {
-						color: $yellow;
 						outline-color: $yellow;
+						color: $yellow;
+
 						&:hover {
 							color: $dark;
 						}

@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {useFetch} from "nuxt/app";
+// import {useFetch} from "nuxt/app";
 
 export default {
 

@@ -16,12 +16,12 @@
 				<li><NuxtLink to="/team">settings</NuxtLink></li>-->
 			</ul>
 		</nav>
-	</header>
 
+	</header>
 </template>
 
 <style lang="scss" scoped>
-@use 'assets/variables' as *;
+@use '@/assets/_variables.scss' as *;
 
 nav {
 	background-color: $dark;

@@ -4,7 +4,7 @@ declare interface Day {
     contentType: string,
     content?: string,
     isToday?: boolean,
-    events?: object[{
+    events?: Array[{
         id: number,
         content: string,
     }]
