@@ -1,45 +1,47 @@
 <template>
 	<teleport to="body">
-		<div class="alert" :class="alertType" :style="{'--color': getColor(alertType)}" @click="showAlert(timer, )">
-			<p class="alert__message">{{ text }}</p>
-			<span class="alert__progressbar">
-				<span class="alert__progressbar-inner"></span>
+		<div
+			v-if="show"
+			class="toaster"
+			:class="toasterType"
+			:style="{'--color': getColor(toasterType)}"
+			@click="closeToaster"
+			>
+			<p class="toaster__message">{{ text }}</p>
+			<span class="toaster__progressbar">
+				<span class="toaster__progressbar-inner" :style="{'width': progression + '%'}"></span>
 			</span>
 		</div>
 	</teleport>
 </template>
 
 <script lang="ts">
-export default {
+export default defineComponent({
 	props: {
-		'text': {
+		toasterType: {
 			type: String,
-			required: true,
+			default: 'success', // warning, error
 		},
-		'alertType': {
+		text: {
 			type: String,
-			required: true,
-			default: 'success' // warning, error
+			required: true
 		},
-		'timer': {
+		timer: {
 			type: Number,
-			default: 3000 // ms
-		},
+			default: 5000,
+		}
 	},
 	data: () => ({
-		// get json data en fonction du nom du widget
+		progression: 0,
+		show: false,
+		timing: null,
 	}),
+	watch: {
+		text(){
+			this.newToast()
+		}
+	},
 	methods: {
-		showAlert(timer: number) {
-			console.log(this.timer)
-			setTimeout(() => {
-				console.log('show')
-
-			}, timer)
-		},
-		hideAlert() {
-			console.log('hide')
-		},
 		getColor(type:string):string {
 			switch (type) {
 				case 'error':
@@ -51,26 +53,48 @@ export default {
 				default:
 					return '134, 51%'
 			}
+		},
+
+		closeToaster() {
+			this.show = false;
+			clearInterval(this.timing)
+		},
+
+		newToast() {
+			console.log('show')
+			this.show = true;
+			const maxTimer = this.timer / 1000
+			let tic = 0
+
+			this.timing = setInterval(() => {
+				tic += 1
+				this.progression = tic * maxTimer / 100
+			}, .01);
+
+			setTimeout(() => {
+				this.closeToaster()
+			}, this.timer);
 		}
 	},
-	computed: {
+	computed: {},
+	mounted() {
 
 	}
-}
+})
 
 </script>
 
 <style lang="scss" scoped>
 @use '@/assets/_variables.scss' as *;
 
-.alert {
+.toaster {
 	@include flex(center, center, $gap: 20px);
 	@include position($bottom: 2vh, $left: 50%, $position: fixed);
 	@include color('background-color', $dark, .2);
 	border: solid .2px hsl(var(--color), 50%);
 	translate: -50%;
 	backdrop-filter: blur(3px);
-	border-radius: 0 4px 4px 4px;
+	border-radius: 4px;
 	width: fit-content;
 	padding: 5px 20px 7.5px;
 	overflow: hidden;
@@ -78,22 +102,22 @@ export default {
 
 	&__message {
 		font-weight: 900;
-		font-size: 17px;
+		font-size: 40px;
 		color: hsl(var(--color), 50%);
 	}
 
 	&__progressbar {
 		@include position($bottom: 0, $left: 0);
 		width: 100%;
-		height: 2px;
-		background-color: hsl(var(--color), 10%);
+		height: 5px;
+		background-color: hsl(var(--color), 30%);
 		border-radius: 0 0 0 4px;
 		overflow: hidden;
 
 		&-inner {
 			@include position($bottom: 0, $right: 0);
 			width: 40%;
-			height: 2px;
+			height: 5px;
 			background-color: hsl(var(--color), 50%);
 			border-radius: 0 0 0 4px;
 		}

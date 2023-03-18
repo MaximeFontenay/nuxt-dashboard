@@ -98,7 +98,7 @@
 
 export default defineComponent({
 	props: {
-		'widget': {
+		widget: {
 			type: Object as () => Widget,
 			required: true,
 		},

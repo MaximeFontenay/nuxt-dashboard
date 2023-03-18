@@ -1,12 +1,6 @@
-<script lang="ts" setup>
-	definePageMeta({
-		layout: 'dashboard'
-	})
-</script>
-
 <template>
 	<main>
-		<MainHeader/>
+		<MainHeader />
 
 		<p @click="resetWidgetData('all')" style="font-size: 18px; cursor: pointer">
 			reset all storage
@@ -56,19 +50,18 @@
 					v-if="widget.active"
 					:is="widget.location"
 					:widget="widget"
-					@alert="alersqdt(1,2,3)"
 				/>
 			</article>
 		</template>
+		<Toaster :text="toastMessage" />
 
-			<Alert alertType="info" text="test" :timer="2000" />
+		<button @click="newAlert">alert</button>
 	</main>
 </template>
 
 
 <script lang="ts">
-export default {
-	layout: 'dashboard',
+export default defineComponent({
 	data: () => ({
 		widgets: [
 			{
@@ -100,12 +93,12 @@ export default {
 				order: 4
 			},
 		],
+		toastMessage: ''
 	}),
 	methods: {
-		alersqdt(a, b, c):void {
-			console.log(a)
-			console.log(b)
-			console.log(c)
+		newAlert():void {
+			this.toastMessage = Math.random().toString()
+			//this.$toaster('Hello world!', 5000, 'success')
 		},
 
 		resetWidgetData(widgetSlug:string) {
@@ -120,7 +113,7 @@ export default {
 			console.log(localStorage)
 		}
 	}
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -169,7 +162,7 @@ main {
 	max-width: 90vw;
 	background-color: $dark;
 	padding: 20px 25px;
-	border-radius: 0 20px 20px 20px;
+	border-radius: 20px;
 	color: $light;
 	position: relative;
 

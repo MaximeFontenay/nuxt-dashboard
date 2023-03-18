@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts">
-export default {
+export default defineComponent({
 	props: ['color'],
-}
+})
 </script>
 
 <style scoped>

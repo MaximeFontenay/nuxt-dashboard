@@ -10,14 +10,6 @@ export default defineNuxtConfig({
                name: 'description', content: 'Create my personal customizable dashboard for free.'
             }]
         },
-        pageTransition: {
-            name: 'fade',
-            mode: 'out-in' // default
-        },
-        layoutTransition: {
-            name: 'slide',
-            mode: 'out-in' // default
-        }
     },
     css: [
         '@/assets/_variables.scss',
@@ -33,6 +25,7 @@ export default defineNuxtConfig({
         strict: true
     },
     modules: [
+        '@nuxt/devtools',
         '@nuxt/content',
         '@nuxt/image-edge',
         '@nuxtjs/supabase',

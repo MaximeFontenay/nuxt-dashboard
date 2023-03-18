@@ -43,7 +43,7 @@
 <script lang="ts">
 export default defineComponent({
 	props: {
-		'widget': {
+		widget: {
 			type: Object as () => Widget,
 			required: true,
 		}
@@ -70,7 +70,7 @@ export default defineComponent({
 	}),
 	methods: {
 		getDay(day: object) {
-			console.log(day)
+			this.$toaster({ text: 'Button clicked!', alertType: 'warning', timer: 5000 })
 		},
 		initCalendar(selectedMonth: number) {
 			// Clear previous month data

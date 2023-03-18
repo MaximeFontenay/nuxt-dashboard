@@ -27,6 +27,7 @@ nav {
 	background-color: $dark;
 	padding: clamp(20px, 1.5vw, 50px);
 	border-radius: 100px;
+	width: fit-content;
 
 	ul {
 		@include flex(flex-start, center, $gap: clamp(5px, 1vw, 40px));
